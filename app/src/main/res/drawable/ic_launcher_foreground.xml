@@ -1,0 +1,40 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Warehouse/Box icon - main body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,26 L30,38 L30,70 L54,82 L78,70 L78,38 Z" />
+    <!-- Front face -->
+    <path
+        android:fillColor="#E8F5E9"
+        android:pathData="M54,82 L30,70 L30,38 L54,50 Z" />
+    <!-- Right face -->
+    <path
+        android:fillColor="#C8E6C9"
+        android:pathData="M54,82 L78,70 L78,38 L54,50 Z" />
+    <!-- Top face -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,26 L30,38 L54,50 L78,38 Z" />
+    <!-- Box opening line -->
+    <path
+        android:fillColor="#1B5E20"
+        android:pathData="M42,32 L54,38 L66,32"
+        android:strokeWidth="1.5"
+        android:strokeColor="#1B5E20" />
+    <!-- Tape/seal on box -->
+    <path
+        android:fillColor="#FF6F00"
+        android:pathData="M54,50 L54,82"
+        android:strokeWidth="2.5"
+        android:strokeColor="#FF6F00" />
+    <path
+        android:fillColor="#FF6F00"
+        android:pathData="M54,26 L54,50"
+        android:strokeWidth="2.5"
+        android:strokeColor="#FF6F00" />
+</vector>

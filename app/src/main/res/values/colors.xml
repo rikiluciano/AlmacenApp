@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta principal - Almacén Industrial Premium -->
+    <color name="primary">#1B5E20</color>
+    <color name="primary_dark">#0D3B12</color>
+    <color name="primary_light">#388E3C</color>
+    <color name="accent">#FF6F00</color>
+    <color name="accent_light">#FFA000</color>
+    <color name="surface_dark">#121212</color>
+    <color name="on_surface">#E0E0E0</color>
+</resources>

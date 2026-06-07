@@ -1,0 +1,5 @@
+open rlabs.x10.mx
+almacen@rlabs.x10.mx
+contrase?a123
+ls
+quit

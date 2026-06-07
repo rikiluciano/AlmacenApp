@@ -1,0 +1,33 @@
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Build folders
+build/
+app/build/
+backend/build/
+web/build/
+dist/
+out/
+.gradle/
+.kotlin/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Android/Local properties
+local.properties
+
+# Firebase
+.firebase/
+firebase-debug.log*
+
+# Environment variables / secrets
+.env
+.env.*
+*.pem
+*.key
+google-services.json

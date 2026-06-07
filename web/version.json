@@ -1,0 +1,6 @@
+{
+  "versionCode": 16,
+  "versionName": "2.5",
+  "downloadUrl": "https://almacen-inteligente-2f515.web.app/app-release-2.5.dat",
+  "releaseNotes": "Corrección de formato de bodega. Eliminación de prefijos duplicados y actualización de footer en app Android."
+}
