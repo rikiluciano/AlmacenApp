@@ -37,8 +37,9 @@ console.log(`📦 Actualizando de la versión ${versionData.versionName} (${vers
 // 3. Compilar APK (usaremos assembleDebug por defecto, puedes cambiarlo a assembleRelease)
 console.log("🔨 Compilando la aplicación Android (puede tardar unos minutos)...");
 try {
-    // Usamos gradlew.bat porque estamos en Windows
-    execSync('.\\gradlew.bat assembleDebug', { cwd: appDir, stdio: 'inherit' });
+    // Detect OS and use appropriate gradlew
+    const gradlewCmd = process.platform === 'win32' ? '.\\gradlew.bat' : './gradlew';
+    execSync(`${gradlewCmd} assembleDebug`, { cwd: appDir, stdio: 'inherit' });
 } catch (e) {
     console.warn("⚠️ Advertencia: No se pudo compilar el APK automáticamente (probablemente falta JAVA_HOME). Se intentará usar el APK existente.");
 }
