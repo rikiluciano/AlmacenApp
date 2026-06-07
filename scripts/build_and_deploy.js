@@ -101,3 +101,57 @@ console.log(`
 La app Android ha sido compilada, empaquetada de forma segura y está disponible online.
 Los enlaces de descarga generados desde la web o la app apuntarán a esta nueva versión oculta.
 `);
+
+// 7. Subir APK a GitHub Releases
+if (process.env.GITHUB_TOKEN) {
+    (async () => {
+        console.log("📦 GITHUB_TOKEN detectado, creando Release en GitHub...");
+        try {
+            const repoOwner = "rikiluciano";
+            const repoName = "AlmacenApp";
+            const token = process.env.GITHUB_TOKEN.trim();
+            
+            // Usamos import() dinámico para fetch si Node es muy viejo, pero Node 20 lo tiene nativo.
+            const releaseRes = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/releases`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tag_name: `v${newVersionName}`,
+                    name: `AlmacenApp v${newVersionName} (Build ${newVersionCode})`,
+                    body: "Release generada automáticamente por el servidor VPS.",
+                    draft: false,
+                    prerelease: false
+                })
+            });
+
+            if (!releaseRes.ok) throw new Error("Error creando release: " + await releaseRes.text());
+            const releaseData = await releaseRes.json();
+            const uploadUrl = releaseData.upload_url.replace('{?name,label}', `?name=AlmacenApp_v${newVersionName}.apk`);
+
+            console.log("⬆️ Subiendo APK al Release de GitHub...");
+            const apkBuffer = fs.readFileSync(targetApkPath);
+            const uploadRes = await fetch(uploadUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/vnd.android.package-archive',
+                    'Content-Length': apkBuffer.length
+                },
+                body: apkBuffer
+            });
+
+            if (!uploadRes.ok) throw new Error("Error subiendo asset: " + await uploadRes.text());
+            console.log(`🎉 ¡Release v${newVersionName} publicado exitosamente en GitHub!`);
+
+        } catch (e) {
+            console.error("❌ Falló la subida a GitHub Releases:", e.message);
+        }
+    })();
+} else {
+    console.log("ℹ️ No se detectó GITHUB_TOKEN, omitiendo Release en GitHub.");
+}
