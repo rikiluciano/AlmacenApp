@@ -31,8 +31,15 @@ const newVersionName = `${major}.${minor}`;
 
 console.log(`📦 Actualizando de la versión ${versionData.versionName} (${versionData.versionCode}) a ${newVersionName} (${newVersionCode})...`);
 
-// (Para que el cambio de versión aplique al APK, tendrías que cambiar build.gradle.kts, 
-// pero asumiremos que lo editas a mano o el auto-updater se fía de version.json).
+// 2.5 Actualizar build.gradle.kts para que el APK tenga la nueva versión
+const gradleFile = path.join(appDir, 'app', 'build.gradle.kts');
+if (fs.existsSync(gradleFile)) {
+    let gradleContent = fs.readFileSync(gradleFile, 'utf8');
+    gradleContent = gradleContent.replace(/versionCode\s*=\s*\d+/, `versionCode = ${newVersionCode}`);
+    gradleContent = gradleContent.replace(/versionName\s*=\s*"[^"]+"/, `versionName = "${newVersionName}"`);
+    fs.writeFileSync(gradleFile, gradleContent);
+    console.log(`✅ build.gradle.kts actualizado (versionCode ${newVersionCode}, versionName "${newVersionName}")`);
+}
 
 // 3. Compilar APK (usaremos assembleDebug por defecto, puedes cambiarlo a assembleRelease)
 console.log("🔨 Compilando la aplicación Android (puede tardar unos minutos)...");
