@@ -138,6 +138,22 @@ fun HomeScreen(navController: NavController, viewModel: ItemViewModel) {
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
+                
+                Divider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+                
+                NavigationDrawerItem(
+                    icon = { Icon(Icons.Default.Share, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                    label = { Text("Compartir App Android", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold) },
+                    selected = false,
+                    onClick = {
+                        scope.launch { 
+                            drawerState.close()
+                            com.cartones.almacen.util.ShareAppManager.shareDynamicLink(navController.context)
+                        }
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+
                 Spacer(Modifier.weight(1f))
                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
                 Spacer(Modifier.height(8.dp))

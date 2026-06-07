@@ -79,6 +79,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setupModal();
     setupCatalogForms();
     setupForm();
+    setupShareApp();
     initRealtimeSync();
 });
 
@@ -258,6 +259,59 @@ function setupNavigation() {
 
     document.getElementById("btn-cancel-form").addEventListener("click", () => {
         document.getElementById("nav-inventory").click();
+    });
+}
+
+// ═══════════════ SHARE APP LOGIC ═══════════════
+function setupShareApp() {
+    const btnShare = document.getElementById("btn-share-app");
+    const modalOverlay = document.getElementById("share-modal-overlay");
+    const btnClose = document.getElementById("share-modal-close-btn");
+    const qrImage = document.getElementById("qr-image");
+    const qrLoading = document.getElementById("qr-loading");
+
+    if (!btnShare || !modalOverlay) return;
+
+    btnShare.addEventListener("click", async () => {
+        modalOverlay.style.display = "flex";
+        qrImage.style.display = "none";
+        qrLoading.style.display = "block";
+
+        try {
+            // 1. Generar Token Único
+            const tokenRef = db.collection('app_downloads').doc();
+            await tokenRef.set({
+                used: false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // 2. Crear URL (Apunta a download.html?t=TOKEN)
+            const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
+            const downloadUrl = baseUrl + "download.html?t=" + tokenRef.id;
+
+            // 3. Generar QR Code usando API pública y confiable
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(downloadUrl)}`;
+            
+            qrImage.onload = () => {
+                qrLoading.style.display = "none";
+                qrImage.style.display = "block";
+            };
+            qrImage.onerror = () => {
+                showToast("Error al cargar el código QR.", "error");
+                modalOverlay.style.display = "none";
+            };
+            
+            qrImage.src = qrUrl;
+
+        } catch (e) {
+            console.error("Error generando enlace de descarga:", e);
+            showToast("Error generando el código QR.", "error");
+            modalOverlay.style.display = "none";
+        }
+    });
+
+    btnClose.addEventListener("click", () => {
+        modalOverlay.style.display = "none";
     });
 }
 

@@ -38,6 +38,13 @@
                 </a>
             </nav>
 
+            <div class="sidebar-bottom-action">
+                <button id="btn-share-app" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px;">
+                    <span class="material-icons-round">share</span>
+                    Compartir App
+                </button>
+            </div>
+
             <div class="sync-badge" id="sync-badge">
                 <span class="material-icons-round">cloud_done</span>
                 <span id="sync-text">Conectado</span>
@@ -309,6 +316,29 @@
                         <span class="material-icons-round">delete</span> Eliminar
                     </button>
                     <button class="btn btn-ghost" id="modal-close-btn">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ SHARE APP MODAL ══ -->
+    <div class="modal-overlay" id="share-modal-overlay" style="display:none">
+        <div class="modal" id="share-modal" style="text-align: center; max-width: 350px;">
+            <div class="modal-body">
+                <h2>Compartir Aplicación</h2>
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Dile a tu compañero que escanee este código con la cámara de su celular. La descarga iniciará sola.</p>
+                
+                <div id="qr-container" style="background: white; padding: 10px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; min-height: 200px; min-width: 200px; position: relative;">
+                    <div id="qr-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <div class="spinner" style="border-color:#4f46e5; border-top-color:transparent;"></div>
+                    </div>
+                    <img id="qr-image" src="" alt="Código QR de descarga" style="display: none; width: 200px; height: 200px;">
+                </div>
+                
+                <p style="color: #ef4444; font-size: 12px; font-weight: bold;">⚠️ Este código es de un solo uso.</p>
+                
+                <div class="modal-actions" style="justify-content: center;">
+                    <button class="btn btn-ghost" id="share-modal-close-btn" style="width: 100%;">Cerrar</button>
                 </div>
             </div>
         </div>
