@@ -2,6 +2,7 @@ package com.cartones.almacen.ui
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -770,7 +771,7 @@ fun SocialIcon(iconRes: Int) {
     Box(
         modifier = Modifier
             .size(28.dp)
-            .androidx.compose.foundation.border(1.dp, Color(0xFF4A5568), RoundedCornerShape(6.dp))
+            .border(1.dp, Color(0xFF4A5568), RoundedCornerShape(6.dp))
             .background(Color.Transparent, RoundedCornerShape(6.dp)),
         contentAlignment = Alignment.Center
     ) {
