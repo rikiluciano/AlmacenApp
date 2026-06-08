@@ -17,6 +17,30 @@ const storage = firebase.storage();
 db.settings({ cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED });
 
 // ════════ TOAST NOTIFICATIONS ════════
+// Helper for modern alerts
+function confirmDelete(message, onConfirm) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74c3c',
+            cancelButtonColor: '#34495e',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            background: '#1e1e2d',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                onConfirm();
+            }
+        });
+    } else {
+        if (confirm(message)) onConfirm();
+    }
+}
+
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container');
     if (!container) return;
@@ -503,9 +527,9 @@ function renderCatalogs() {
     wList.innerHTML = state.warehouses.length ? "" : '<li class="empty-msg">No hay bodegas registradas</li>';
     state.warehouses.forEach(w => {
         const li = createLi(`<strong>${w.code}</strong> <span>${w.name}</span>`, () => {
-            if (confirm(`¿Eliminar bodega ${w.code} - ${w.name}?`)) {
+            confirmDelete(`¿Eliminar bodega ${w.code} - ${w.name}?`, () => {
                 db.collection("warehouses").doc(w.code).delete().catch(err => showToast("Error: " + err.message, "error"));
-            }
+            });
         });
         wList.appendChild(li);
     });
@@ -515,9 +539,9 @@ function renderCatalogs() {
     cList.innerHTML = state.classes.length ? "" : '<li class="empty-msg">No hay clases registradas</li>';
     state.classes.forEach(c => {
         const li = createLi(`<strong>${c.code}</strong> <span>${c.name}</span> <span class="catalog-badge">B: ${c.warehouseCode}</span>`, () => {
-            if (confirm(`¿Eliminar clase ${c.code} - ${c.name}?`)) {
+            confirmDelete(`¿Eliminar clase ${c.code} - ${c.name}?`, () => {
                 db.collection("classes").doc(c.code).delete().catch(err => showToast("Error: " + err.message, "error"));
-            }
+            });
         });
         cList.appendChild(li);
     });
@@ -528,9 +552,9 @@ function renderCatalogs() {
     state.categories.forEach(c => {
         const docId = `${c.classCode}-${c.code}`;
         const li = createLi(`<strong>${c.code}</strong> <span>${c.name}</span> <span class="catalog-badge">C: ${c.classCode}</span>`, () => {
-            if (confirm(`¿Eliminar categoría ${c.code} - ${c.name}?`)) {
+            confirmDelete(`¿Eliminar categoría ${c.code} - ${c.name}?`, () => {
                 db.collection("categories").doc(docId).delete().catch(err => showToast("Error: " + err.message, "error"));
-            }
+            });
         });
         catList.appendChild(li);
     });
@@ -540,9 +564,9 @@ function renderCatalogs() {
     mList.innerHTML = state.machines.length ? "" : '<li class="empty-msg">No hay máquinas registradas</li>';
     state.machines.forEach(m => {
         const li = createLi(`<strong>${m.code}</strong> <span>${m.name}</span>`, () => {
-            if (confirm(`¿Eliminar máquina ${m.code} - ${m.name}?`)) {
+            confirmDelete(`¿Eliminar máquina ${m.code} - ${m.name}?`, () => {
                 db.collection("machines").doc(m.code).delete().catch(err => showToast("Error: " + err.message, "error"));
-            }
+            });
         });
         mList.appendChild(li);
     });
@@ -552,9 +576,9 @@ function renderCatalogs() {
     uList.innerHTML = state.units.length ? "" : '<li class="empty-msg">No hay unidades registradas</li>';
     state.units.forEach(u => {
         const li = createLi(`<span>${u.name}</span>`, () => {
-            if (confirm(`¿Eliminar unidad de medida "${u.name}"?`)) {
+            confirmDelete(`¿Eliminar unidad de medida "${u.name}"?`, () => {
                 db.collection("units").doc(u.name).delete().catch(err => showToast("Error: " + err.message, "error"));
-            }
+            });
         });
         uList.appendChild(li);
     });
@@ -565,9 +589,9 @@ function renderCatalogs() {
         aList.innerHTML = state.areasDepts.length ? "" : '<li class="empty-msg">No hay áreas/departamentos registrados</li>';
         state.areasDepts.forEach(a => {
             const li = createLi(`<strong>${a.code}</strong> <span>${a.name}</span>`, () => {
-                if (confirm(`¿Eliminar área/departamento ${a.code} - ${a.name}?`)) {
+                confirmDelete(`¿Eliminar área/departamento ${a.code} - ${a.name}?`, () => {
                     db.collection("areas_depts").doc(a.code).delete().catch(err => showToast("Error: " + err.message, "error"));
-                }
+                });
             });
             aList.appendChild(li);
         });
@@ -972,7 +996,7 @@ function setupModal() {
     document.getElementById("modal-delete-btn").addEventListener("click", async () => {
         if (!state.selectedItem) return;
         const item = state.selectedItem;
-        if (confirm(`¿Estás seguro de que deseas eliminar permanentemente a "${item.name}"?`)) {
+        confirmDelete(`¿Estás seguro de que deseas eliminar permanentemente a "${item.name}"?`, async () => {
             try {
                 await db.collection("items").doc(item.id).delete();
                 closeModal();
@@ -980,7 +1004,7 @@ function setupModal() {
                 console.error("Error deleting item:", err);
                 showToast("Error al eliminar el artículo: " + err.message, "error");
             }
-        }
+        });
     });
 }
 
