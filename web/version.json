@@ -1,6 +1,6 @@
 {
-  "versionCode": 26,
-  "versionName": "2.15",
+  "versionCode": 28,
+  "versionName": "2.17",
   "downloadUrl": "https://almacen-inteligente-2f515.web.app/secure_app_2.7_5b95634785a6.dat",
   "releaseNotes": "Prueba del sistema de CI/CD VPS automatizado."
 }

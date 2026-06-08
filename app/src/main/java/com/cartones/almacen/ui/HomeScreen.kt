@@ -2,6 +2,8 @@ package com.cartones.almacen.ui
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.BorderStroke
@@ -251,6 +253,7 @@ fun HomeScreen(navController: NavController, viewModel: ItemViewModel) {
                     transitionSpec = {
                         fadeIn() togetherWith fadeOut()
                     },
+                    modifier = Modifier.weight(1f),
                     label = "content_switch"
                 ) { isDashboard ->
                     if (isDashboard) {
@@ -352,8 +355,7 @@ fun HomeScreen(navController: NavController, viewModel: ItemViewModel) {
                                     onClick = { navController.navigate("catalogs") }
                                 )
                             }
-                            item { PremiumFooter() }
-                            item { Spacer(Modifier.height(40.dp)) }
+                            item { Spacer(Modifier.height(16.dp)) }
                         }
                     } else {
                         // ═══════════════ RESULTADOS DE BÚSQUEDA ═══════════════
@@ -427,13 +429,15 @@ fun HomeScreen(navController: NavController, viewModel: ItemViewModel) {
                                             onClick = { navController.navigate("detail/${item.id}") }
                                         )
                                     }
-                                    item { PremiumFooter() }
-                                    item { Spacer(modifier = Modifier.height(80.dp)) }
+                                    item { Spacer(modifier = Modifier.height(16.dp)) }
                                 }
                             }
                         }
                     }
                 }
+                Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                Spacer(Modifier.height(8.dp))
+                PremiumFooter()
             }
         }
     }
@@ -564,6 +568,16 @@ fun ItemCard(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.15f))
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
+            if (item.photoPath != null) {
+                AsyncImage(
+                    model = item.photoPath,
+                    contentDescription = item.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+            }
             // Cabecera superior oscura / acentuada
             Row(
                 modifier = Modifier
