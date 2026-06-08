@@ -720,26 +720,65 @@ fun PremiumFooter(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(Color(0xFF1A1E29), shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+            .padding(horizontal = 24.dp, vertical = 24.dp),
     ) {
-        androidx.compose.material3.Divider(
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 60.dp).padding(bottom = 12.dp)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "RLabs",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.White,
+                    letterSpacing = (-0.5).sp
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .background(Color(0xFFEF4444), shape = CircleShape)
+                )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                SocialIcon(iconRes = com.cartones.almacen.R.drawable.ic_x_logo)
+                SocialIcon(iconRes = com.cartones.almacen.R.drawable.ic_github_logo)
+                SocialIcon(iconRes = com.cartones.almacen.R.drawable.ic_linkedin_logo)
+                SocialIcon(iconRes = com.cartones.almacen.R.drawable.ic_facebook_logo)
+                SocialIcon(iconRes = com.cartones.almacen.R.drawable.ic_instagram_logo)
+                SocialIcon(iconRes = com.cartones.almacen.R.drawable.ic_whatsapp_logo)
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        androidx.compose.material3.Divider(color = Color(0xFF2D3748), thickness = 1.dp)
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = buildAnnotatedString {
-                append("Creado por ")
-                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.ExtraBold)) {
-                    append("RLabs")
-                }
-                append(". © $currentYear Todos los derechos reservados.")
-            },
+            text = "© $currentYear RLabs. Todos los derechos reservados.",
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            color = Color(0xFF64748B),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Start,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun SocialIcon(iconRes: Int) {
+    Box(
+        modifier = Modifier
+            .size(34.dp)
+            .androidx.compose.foundation.border(1.dp, Color(0xFF4A5568), RoundedCornerShape(8.dp))
+            .background(Color.Transparent, RoundedCornerShape(8.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = androidx.compose.ui.res.painterResource(id = iconRes),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = Color(0xFFCBD5E1)
         )
     }
 }
