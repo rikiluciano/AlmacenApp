@@ -106,7 +106,8 @@ fun ItemDetailScreen(navController: NavController, viewModel: ItemViewModel, ite
                     val imageModel = if (currentItem.photoPath.startsWith("data:image")) {
                         try {
                             val base64String = currentItem.photoPath.substringAfter("base64,")
-                            android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
+                            val decodedBytes = android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
+                            android.graphics.BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
                         } catch (e: Exception) {
                             currentItem.photoPath
                         }
