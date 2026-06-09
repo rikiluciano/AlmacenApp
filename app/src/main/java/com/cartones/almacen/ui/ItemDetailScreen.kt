@@ -102,9 +102,20 @@ fun ItemDetailScreen(navController: NavController, viewModel: ItemViewModel, ite
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
-                if (currentItem.photoPath != null) {
+                if (!currentItem.photoPath.isNullOrEmpty()) {
+                    val imageModel = if (currentItem.photoPath.startsWith("data:image")) {
+                        try {
+                            val base64String = currentItem.photoPath.substringAfter("base64,")
+                            android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
+                        } catch (e: Exception) {
+                            currentItem.photoPath
+                        }
+                    } else {
+                        currentItem.photoPath
+                    }
+
                     Image(
-                        painter = rememberAsyncImagePainter(Uri.parse(currentItem.photoPath)),
+                        painter = rememberAsyncImagePainter(imageModel),
                         contentDescription = "Foto del artículo",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()

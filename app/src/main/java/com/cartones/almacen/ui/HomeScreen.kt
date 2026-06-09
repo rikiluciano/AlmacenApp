@@ -568,9 +568,20 @@ fun ItemCard(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.15f))
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            if (item.photoPath != null) {
+            if (!item.photoPath.isNullOrEmpty()) {
+                val imageModel = if (item.photoPath.startsWith("data:image")) {
+                    try {
+                        val base64String = item.photoPath.substringAfter("base64,")
+                        android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
+                    } catch (e: Exception) {
+                        item.photoPath
+                    }
+                } else {
+                    item.photoPath
+                }
+
                 AsyncImage(
-                    model = item.photoPath,
+                    model = imageModel,
                     contentDescription = item.name,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
