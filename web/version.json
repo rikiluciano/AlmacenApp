@@ -1,6 +1,6 @@
 {
-  "versionCode": 30,
-  "versionName": "2.20",
-  "downloadUrl": "https://almacen-inteligente-2f515.web.app/secure_app_2.20_5b95634785a6.dat",
-  "releaseNotes": "Corregido iconos de footer y soporte de imagen base64."
+  "versionCode": 31,
+  "versionName": "2.21",
+  "downloadUrl": "https://almacen-inteligente-2f515.web.app/secure_app_2.21_b1a4cf.dat",
+  "releaseNotes": "Actualización que resuelve el movimiento del footer y la visualización de imágenes añadidas desde Android."
 }
