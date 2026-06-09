@@ -13,8 +13,8 @@ android {
         applicationId = "com.cartones.almacen"
         minSdk = 24
         targetSdk = 34
-        versionCode = 17
-        versionName = "2.11"
+        versionCode = 30
+        versionName = "2.20"
     }
 
     buildTypes {
