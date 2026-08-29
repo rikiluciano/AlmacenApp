@@ -536,23 +536,49 @@ fun AddEditItemScreen(navController: NavController, viewModel: ItemViewModel, it
                     scope.launch {
                         var finalPhotoUrl = photoUrl // URL existente (si editamos y no cambiamos foto)
 
-                        // Si hay una nueva imagen local seleccionada, subirla a Firebase Storage
+                        // Si hay una nueva imagen local seleccionada, procesarla y subirla a Firebase Storage
                         if (photoUri != null && photoUri.toString() != photoUrl) {
                             try {
-                                val stream = context.contentResolver.openInputStream(photoUri!!)
-                                val originalBitmap = android.graphics.BitmapFactory.decodeStream(stream)
-                                stream?.close()
+                                val inputStream = context.contentResolver.openInputStream(photoUri!!)
+                                val originalBitmap = android.graphics.BitmapFactory.decodeStream(inputStream)
+                                inputStream?.close()
                                 
-                                val MAX_SIZE = 600
-                                val scale = kotlin.math.min(MAX_SIZE.toFloat() / originalBitmap.width, MAX_SIZE.toFloat() / originalBitmap.height)
-                                val width = if (scale < 1) (originalBitmap.width * scale).toInt() else originalBitmap.width
-                                val height = if (scale < 1) (originalBitmap.height * scale).toInt() else originalBitmap.height
+                                // Leer EXIF para rotación
+                                var rotation = 0f
+                                context.contentResolver.openInputStream(photoUri!!)?.use { exifStream ->
+                                    val exif = android.media.ExifInterface(exifStream)
+                                    val orientation = exif.getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, android.media.ExifInterface.ORIENTATION_NORMAL)
+                                    rotation = when (orientation) {
+                                        android.media.ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+                                        android.media.ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+                                        android.media.ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+                                        else -> 0f
+                                    }
+                                }
+
+                                var bitmapToProcess = originalBitmap
+                                if (rotation != 0f) {
+                                    val matrix = android.graphics.Matrix()
+                                    matrix.postRotate(rotation)
+                                    bitmapToProcess = android.graphics.Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
+                                }
+
+                                // Aumentamos tamaño y calidad para conservar buena resolución
+                                val MAX_SIZE = 1500
+                                val scale = kotlin.math.min(MAX_SIZE.toFloat() / bitmapToProcess.width, MAX_SIZE.toFloat() / bitmapToProcess.height)
+                                val width = if (scale < 1) (bitmapToProcess.width * scale).toInt() else bitmapToProcess.width
+                                val height = if (scale < 1) (bitmapToProcess.height * scale).toInt() else bitmapToProcess.height
                                 
-                                val resized = android.graphics.Bitmap.createScaledBitmap(originalBitmap, width, height, true)
+                                val resized = android.graphics.Bitmap.createScaledBitmap(bitmapToProcess, width, height, true)
                                 val out = java.io.ByteArrayOutputStream()
-                                resized.compress(android.graphics.Bitmap.CompressFormat.JPEG, 60, out)
-                                val base64 = android.util.Base64.encodeToString(out.toByteArray(), android.util.Base64.NO_WRAP)
-                                finalPhotoUrl = "data:image/jpeg;base64,$base64"
+                                resized.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, out)
+                                val photoBytes = out.toByteArray()
+                                
+                                // Subir a Firebase Storage en lugar de Firestore (Base64)
+                                // para evitar el límite de 1MB por documento y mantener calidad
+                                val storageRef = Firebase.storage.reference.child("item_photos/${java.util.UUID.randomUUID()}.jpg")
+                                storageRef.putBytes(photoBytes).await()
+                                finalPhotoUrl = storageRef.downloadUrl.await().toString()
                             } catch (e: Exception) {
                                 Toast.makeText(context, "Error procesando foto: ${e.message}", Toast.LENGTH_LONG).show()
                                 isSaving = false
